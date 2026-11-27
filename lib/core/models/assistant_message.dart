@@ -14,6 +14,7 @@ class AssistantMessage {
   final String? modelName;
   final String? sourceStatus;
   final String? retryPrompt;
+  final bool isMock;
   final List<String> relatedSuggestions;
   final List<String> citations;
 
@@ -28,6 +29,7 @@ class AssistantMessage {
     this.modelName,
     this.sourceStatus,
     this.retryPrompt,
+    this.isMock = false,
     this.relatedSuggestions = const [],
     this.citations = const [],
   });
@@ -97,6 +99,7 @@ class AssistantMessage {
       conversationId: json['conversation_id'] as String?,
       modelName: json['model'] as String?,
       sourceStatus: json['source_status'] as String?,
+      isMock: json['is_mock'] as bool? ?? json['isMock'] as bool? ?? false,
       relatedSuggestions: suggestions,
       citations: citations,
     );
@@ -114,6 +117,7 @@ class AssistantMessage {
         'conversation_id': conversationId,
         'model': modelName,
         'source_status': sourceStatus,
+        'is_mock': isMock,
         'suggested_prompts': relatedSuggestions,
         'citations': citations,
       };
@@ -129,6 +133,7 @@ class AssistantMessage {
     String? modelName,
     String? sourceStatus,
     String? retryPrompt,
+    bool? isMock,
     List<String>? relatedSuggestions,
     List<String>? citations,
   }) {
@@ -143,6 +148,7 @@ class AssistantMessage {
       modelName: modelName ?? this.modelName,
       sourceStatus: sourceStatus ?? this.sourceStatus,
       retryPrompt: retryPrompt ?? this.retryPrompt,
+      isMock: isMock ?? this.isMock,
       relatedSuggestions: relatedSuggestions ?? this.relatedSuggestions,
       citations: citations ?? this.citations,
     );

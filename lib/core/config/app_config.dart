@@ -55,20 +55,32 @@ class AppConfig {
   static String get apiBaseUrlAndroid =>
       getString('API_BASE_URL_ANDROID', defaultValue: _androidUrl);
 
-  static String get apiBaseUrl {
-    if (kIsWeb) return apiBaseUrlWeb;
-
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      return apiBaseUrlAndroid;
-    }
-
+  static String apiBaseUrlFor({
+    required bool isWeb,
+    required TargetPlatform targetPlatform,
+  }) {
+    if (isWeb) return apiBaseUrlWeb;
+    if (targetPlatform == TargetPlatform.android) return apiBaseUrlAndroid;
     return apiBaseUrlWeb;
   }
+
+  static String get apiBaseUrl => apiBaseUrlFor(
+        isWeb: kIsWeb,
+        targetPlatform: defaultTargetPlatform,
+      );
 
   // Firebase configuration
   static String get firebaseProjectId => getString(
     'FIREBASE_PROJECT_ID',
     defaultValue: const String.fromEnvironment('FIREBASE_PROJECT_ID'),
+  );
+
+  static String get firebaseDatabaseId => getString(
+    'FIREBASE_DATABASE_ID',
+    defaultValue: const String.fromEnvironment(
+      'FIREBASE_DATABASE_ID',
+      defaultValue: '(default)',
+    ),
   );
 
   static String get firebaseMessagingSenderId => getString(

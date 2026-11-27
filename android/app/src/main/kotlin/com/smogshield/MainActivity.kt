@@ -1,4 +1,4 @@
-package com.example.smogshield_ai
+package com.smogshield
 
 import io.flutter.embedding.android.FlutterActivity
 

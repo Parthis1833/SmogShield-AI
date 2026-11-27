@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../config/app_config.dart';
 import '../models/user_profile.dart';
 import '../services/firebase_service.dart';
 
@@ -15,10 +17,16 @@ abstract class FamilyMembersRepository {
 }
 
 class FirestoreFamilyMembersRepository implements FamilyMembersRepository {
+  static const _writeTimeout = Duration(seconds: 15);
+
   final FirebaseFirestore _firestore;
 
   FirestoreFamilyMembersRepository({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+      : _firestore = firestore ??
+            FirebaseFirestore.instanceFor(
+              app: Firebase.app(),
+              databaseId: AppConfig.firebaseDatabaseId,
+            );
 
   CollectionReference<Map<String, dynamic>> _userRef(String userId) =>
       _firestore.collection('users');
@@ -65,13 +73,21 @@ class FirestoreFamilyMembersRepository implements FamilyMembersRepository {
         : _familyRef(userId).doc(member.id);
 
     final map = member.toMap();
+    final now = Timestamp.now();
     map['id'] = docRef.id;
-    map['updatedAt'] = FieldValue.serverTimestamp();
+    map['updatedAt'] = now;
     if (member.createdAt == null) {
-      map['createdAt'] = FieldValue.serverTimestamp();
+      map['createdAt'] = now;
     }
 
-    await docRef.set(map, SetOptions(merge: true));
+    await docRef
+        .set(map, SetOptions(merge: true))
+        .timeout(_writeTimeout, onTimeout: () {
+      throw StateError(
+        'Firestore is not responding. Check Firebase authentication and '
+        'the Android API key, then try again.',
+      );
+    });
   }
 
   @override
@@ -109,11 +125,20 @@ class FirestoreFamilyMembersRepository implements FamilyMembersRepository {
   Future<void> saveUserProfile(UserPersonalProfile profile) async {
     if (profile.uid.isEmpty) throw StateError('User UID is required');
     final map = profile.toMap();
-    map['updatedAt'] = FieldValue.serverTimestamp();
+    final now = Timestamp.now();
+    map['updatedAt'] = now;
     if (profile.createdAt == null) {
-      map['createdAt'] = FieldValue.serverTimestamp();
+      map['createdAt'] = now;
     }
-    await _userRef(profile.uid).doc(profile.uid).set(map, SetOptions(merge: true));
+    await _userRef(profile.uid)
+        .doc(profile.uid)
+        .set(map, SetOptions(merge: true))
+        .timeout(_writeTimeout, onTimeout: () {
+      throw StateError(
+        'Firestore is not responding. Check Firebase authentication and '
+        'the Android API key, then try again.',
+      );
+    });
   }
 }
 

@@ -73,7 +73,7 @@ class _AuthFormScreenState extends ConsumerState<_AuthFormScreen> {
           password: _passwordController.text,
         );
       }
-      if (mounted) context.go('/');
+      if (mounted) context.go('/profile');
     } on FirebaseAuthException catch (error) {
       if (mounted) {
         setState(() => _errorMessage = _messageForAuthError(error.code));
@@ -94,7 +94,7 @@ class _AuthFormScreenState extends ConsumerState<_AuthFormScreen> {
     try {
       final auth = ref.read(authServiceProvider);
       await auth.signInWithGoogle();
-      if (mounted) context.go('/');
+      if (mounted) context.go('/profile');
     } on FirebaseAuthException catch (error) {
       if (mounted) {
         if (error.code == 'sign-in-cancelled') {
@@ -234,6 +234,7 @@ class _AuthFormScreenState extends ConsumerState<_AuthFormScreen> {
                   SizedBox(
                     height: 52,
                     child: OutlinedButton(
+                      key: const Key('auth_google_sign_in'),
                       onPressed: isAnyLoading ? null : _signInWithGoogle,
                       style: OutlinedButton.styleFrom(
                         shape: RoundedRectangleBorder(

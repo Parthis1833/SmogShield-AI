@@ -12,6 +12,7 @@ void main() {
     final auth = _TestAuthService();
     await tester.pumpWidget(_authApp(auth, '/login'));
 
+    await tester.ensureVisible(find.byKey(const Key('auth_submit')));
     await tester.tap(find.byKey(const Key('auth_submit')));
     await tester.pumpAndSettle();
     expect(find.text('Enter a valid email address.'), findsOneWidget);
@@ -22,6 +23,7 @@ void main() {
         find.byKey(const Key('auth_email')), 'person@example.com');
     await tester.enterText(
         find.byKey(const Key('auth_password')), 'correct-horse');
+    await tester.ensureVisible(find.byKey(const Key('auth_submit')));
     await tester.tap(find.byKey(const Key('auth_submit')));
     await tester.pumpAndSettle();
 

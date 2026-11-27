@@ -48,8 +48,8 @@ class ImpactRepository {
       _get('/api/v1/impact/benchmarks', authenticated: false),
       _get('/api/v1/impact/actions'),
     ]);
-    final benchmarksBody = values[0] as Map<String, dynamic>;
-    final actionsBody = values[1] as Map<String, dynamic>;
+    final benchmarksBody = values[0];
+    final actionsBody = values[1];
     final rawBenchmarks = benchmarksBody['benchmarks'] as List;
     final rawActions = actionsBody['actions'] as List;
     return ImpactData(

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import '../config/app_config.dart';
 import '../models/family_profile.dart';
 
 abstract class AuthService {
@@ -209,7 +210,11 @@ abstract class FirestoreSyncService {
 }
 
 class FirebaseFirestoreSyncService implements FirestoreSyncService {
-  FirebaseFirestore get _firestore => FirebaseFirestore.instance;
+  FirebaseFirestore get _firestore =>
+      FirebaseFirestore.instanceFor(
+        app: Firebase.app(),
+        databaseId: AppConfig.firebaseDatabaseId,
+      );
 
   @override
   Future<void> saveProfile(FamilyProfile profile) async {

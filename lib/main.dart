@@ -9,6 +9,7 @@ import 'core/theme/app_theme.dart';
 import 'firebase_options.dart';
 import 'features/splash/splash_screen.dart';
 
+Future<FirebaseApp>? _firebaseInitialization;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,16 +28,8 @@ Future<void> main() async {
     final expectedOptions =
         DefaultFirebaseOptions.currentPlatform;
 
-    // STEP 3: Initialize Firebase.
-    FirebaseApp firebaseApp;
-
-    if (Firebase.apps.any((app) => app.name == '[DEFAULT]')) {
-      firebaseApp = Firebase.app();
-    } else {
-      firebaseApp = await Firebase.initializeApp(
-        options: expectedOptions,
-      );
-    }
+    // STEP 3: Initialize Firebase once and reuse the default app.
+    final firebaseApp = await _initializeFirebase(expectedOptions);
 
     // STEP 4: Verify Firebase project configuration.
     if (firebaseApp.options.projectId != expectedOptions.projectId ||
@@ -89,6 +82,33 @@ Future<void> main() async {
   }
 }
 
+Future<FirebaseApp> _initializeFirebase(FirebaseOptions options) {
+  return _firebaseInitialization ??= _createFirebaseApp(options);
+}
+
+Future<FirebaseApp> _createFirebaseApp(FirebaseOptions options) async {
+  final existingApp = _defaultFirebaseApp;
+  if (existingApp != null) return existingApp;
+
+  try {
+    return await Firebase.initializeApp(options: options);
+  } on FirebaseException catch (error) {
+    // Another startup path may have created the default app after the check
+    // above. Reuse it instead of surfacing a duplicate-app error.
+    if (error.code == 'duplicate-app') {
+      final app = _defaultFirebaseApp;
+      if (app != null) return app;
+    }
+    rethrow;
+  }
+}
+
+FirebaseApp? get _defaultFirebaseApp {
+  for (final app in Firebase.apps) {
+    if (app.name == '[DEFAULT]') return app;
+  }
+  return null;
+}
 
 String _webInitialLocation(Uri uri) {
   if (uri.fragment.startsWith('/')) return uri.fragment;

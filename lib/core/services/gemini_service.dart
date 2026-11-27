@@ -134,7 +134,73 @@ class FastApiGeminiService implements GeminiService {
 }
 
 final geminiServiceProvider = Provider<GeminiService>((ref) {
+  if (const bool.fromEnvironment('DEMO_MODE')) {
+    return SimulatedGeminiService();
+  }
   return FastApiGeminiService(
     idTokenProvider: () => ref.read(authServiceProvider).getIdToken(),
   );
 });
+
+class SimulatedGeminiService implements GeminiService {
+  @override
+  Future<AssistantMessage> askQuestion(
+    String prompt, {
+    Map<String, dynamic>? userContext,
+    Map<String, dynamic>? selectedLocation,
+    List<AssistantMessage> history = const [],
+    String? conversationId,
+  }) async {
+    final trimmed = prompt.trim();
+    if (trimmed.isEmpty) {
+      return AssistantMessage(
+        id: 'sim_empty',
+        text: 'Please type a question regarding air quality or health precautions.',
+        isUser: false,
+        timestamp: DateTime(2026),
+        engine: 'simulated-gemini',
+        isMock: true,
+        disclaimer: 'This guidance is educational and not medical advice.',
+        relatedSuggestions: const [
+          'Can I exercise outside today?',
+          'Which air purifier should I buy?',
+        ],
+      );
+    }
+
+    final lower = trimmed.toLowerCase();
+    String text;
+    List<String> suggestions = [];
+
+    if (lower.contains('jogging') || lower.contains('run') || lower.contains('exercise')) {
+      text = 'During periods of high smog, avoid outdoor exercise. Instead, exercise indoors in a room with HEPA air filtration.';
+      suggestions = ['Can I walk outside with a mask?', 'Indoor workout ideas'];
+    } else if (lower.contains('purifier') || lower.contains('filter')) {
+      text = 'Choose an air purifier equipped with a true HEPA filter and check the Clean Air Delivery Rate (CADR) for your room size.';
+      suggestions = ['How to clean pre-filters?', 'What is CADR?'];
+    } else if (lower.contains('commute') || lower.contains('travel') || lower.contains('work')) {
+      text = 'When commuting in heavy smog, prefer public transit like the metro to lower personal CO₂e emissions. In private cars, turn on cabin air recirculation.';
+      suggestions = ['Should I wear a mask while commuting?', 'Tips for cycling in smog'];
+    } else if (lower.contains('mask') || lower.contains('n95') || lower.contains('respirator')) {
+      text = 'Certified N95, KN95, or FFP2 respirators filter particulate matter. Ensure a snug fit; special pediatric-certified sizing is recommended for children.';
+      suggestions = ['How often should I replace N95 masks?', 'Cloth masks vs N95'];
+    } else if (lower.contains('ventilate') || lower.contains('window')) {
+      text = 'Avoid opening windows during nocturnal thermal inversion periods. The best window for solar convective ventilation is typically between midday and early afternoon when dispersion improves.';
+      suggestions = ['How to create cross ventilation?', 'Using air purifiers during smog'];
+    } else {
+      text = 'Air quality fluctuates based on environmental factors. Ensure high-efficiency filtration indoors and limit prolonged exposure outdoors.';
+      suggestions = ['Check today AQI', 'Safety tips for sensitive groups'];
+    }
+
+    return AssistantMessage(
+      id: 'sim_${DateTime.now().millisecondsSinceEpoch}',
+      text: text,
+      isUser: false,
+      timestamp: DateTime.now(),
+      engine: 'gemini-1.5-flash-simulated',
+      isMock: true,
+      disclaimer: 'Environmental recommendations only; this is not medical advice or clinical diagnosis.',
+      relatedSuggestions: suggestions,
+    );
+  }
+}

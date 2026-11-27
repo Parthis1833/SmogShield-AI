@@ -1,3 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+DateTime? _parseDateTime(Object? value) {
+  if (value is Timestamp) return value.toDate();
+  if (value is DateTime) return value;
+  if (value == null) return null;
+  return DateTime.tryParse(value.toString());
+}
+
 class FamilyMemberHealth {
   final bool hasAsthma;
   final String asthmaSeverity; // 'None', 'Mild', 'Moderate', 'Severe', 'Unknown'
@@ -60,9 +69,7 @@ class FamilyMemberHealth {
           map['otherRespiratoryConditions'] as String? ?? '',
       otherHealthConditions: map['otherHealthConditions'] as String? ?? '',
       healthNotes: map['healthNotes'] as String? ?? '',
-      updatedAt: map['updatedAt'] != null
-          ? DateTime.tryParse(map['updatedAt'].toString())
-          : null,
+      updatedAt: _parseDateTime(map['updatedAt']),
     );
   }
 }
@@ -156,21 +163,15 @@ class FamilyMember {
       id: docId ?? (map['id'] as String? ?? ''),
       name: map['name'] as String? ?? '',
       relationship: map['relationship'] as String? ?? 'Other',
-      dateOfBirth: map['dateOfBirth'] != null
-          ? DateTime.tryParse(map['dateOfBirth'].toString())
-          : null,
+      dateOfBirth: _parseDateTime(map['dateOfBirth']),
       cachedAge: map['age'] as int?,
       gender: map['gender'] as String?,
       photoURL: map['photoURL'] as String?,
       health: map['health'] is Map<String, dynamic>
           ? FamilyMemberHealth.fromMap(map['health'] as Map<String, dynamic>)
           : const FamilyMemberHealth(),
-      createdAt: map['createdAt'] != null
-          ? DateTime.tryParse(map['createdAt'].toString())
-          : null,
-      updatedAt: map['updatedAt'] != null
-          ? DateTime.tryParse(map['updatedAt'].toString())
-          : null,
+      createdAt: _parseDateTime(map['createdAt']),
+      updatedAt: _parseDateTime(map['updatedAt']),
     );
   }
 }
@@ -275,21 +276,15 @@ class UserPersonalProfile {
       name: map['name'] as String? ?? '',
       email: map['email'] as String? ?? '',
       phone: map['phone'] as String? ?? '',
-      dateOfBirth: map['dateOfBirth'] != null
-          ? DateTime.tryParse(map['dateOfBirth'].toString())
-          : null,
+      dateOfBirth: _parseDateTime(map['dateOfBirth']),
       cachedAge: map['age'] as int?,
       gender: map['gender'] as String?,
       photoURL: map['photoURL'] as String?,
       city: map['city'] as String? ?? '',
       state: map['state'] as String? ?? '',
       country: map['country'] as String? ?? 'India',
-      createdAt: map['createdAt'] != null
-          ? DateTime.tryParse(map['createdAt'].toString())
-          : null,
-      updatedAt: map['updatedAt'] != null
-          ? DateTime.tryParse(map['updatedAt'].toString())
-          : null,
+      createdAt: _parseDateTime(map['createdAt']),
+      updatedAt: _parseDateTime(map['updatedAt']),
     );
   }
 }

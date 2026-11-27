@@ -4,6 +4,7 @@
   "API_BASE_URL_WEB": "http://127.0.0.1:8000",
   "API_BASE_URL_ANDROID": "http://10.0.2.2:8000",
   "FIREBASE_PROJECT_ID": "your-firebase-project-id",
+  "FIREBASE_DATABASE_ID": "your-firestore-database-id",
   "FIREBASE_WEB_API_KEY": "your-web-firebase-client-api-key",
   "FIREBASE_WEB_APP_ID": "your-web-firebase-app-id",
   "FIREBASE_ANDROID_API_KEY": "your-android-firebase-client-api-key",
