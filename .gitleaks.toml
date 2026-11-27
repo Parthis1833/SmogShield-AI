@@ -1,0 +1,78 @@
+
+title = "SmogShield AI Secret Detection"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Exclude generated files, caches and non-source artifacts"
+
+paths = [
+    # Firebase configuration and credentials
+    '''(^|/)google-services\.json$''',
+    '''(^|/)GoogleService-Info\.plist$''',
+
+    # Firebase service account credentials
+    '''(^|/)secrets/''',
+    '''(^|/)credentials/''',
+    '''(^|/)service-account.*\.json$''',
+    '''(^|/)service_account.*\.json$''',
+
+
+    # Environment examples (must contain placeholders only)
+    '''(^|/)\.env\.example$''',
+
+    # Local frontend configuration
+    '''^config/frontend\.json$''',
+
+    # Backend environment folders
+    '''^backend/\.env$''',
+    '''^backend/\.env\..+$''',
+    '''^backend/env/''',
+    '''^backend/\.venv/''',
+
+    # Python
+    '''(^|/)\.venv/''',
+    '''(^|/)venv/''',
+    '''(^|/)env/''',
+    '''(^|/)__pycache__/''',
+    '''(^|/)\.pytest_cache/''',
+    '''(^|/)\.mypy_cache/''',
+    '''(^|/)\.ruff_cache/''',
+    '''(^|/)htmlcov/''',
+    '''(^|/)dist/''',
+    '''(^|/)config/frontend\.json$''',
+    '''\.egg-info/''',
+
+    # Flutter / Dart
+    '''(^|/)\.dart_tool/''',
+    '''(^|/)\.pub-cache/''',
+    '''(^|/)\.pub/''',
+    '''(^|/)build/''',
+    '''(^|/)coverage/''',
+    '''(^|/)\.widget_preview/''',
+
+    # Android / iOS generated files
+    '''(^|/)android/app/debug/''',
+    '''(^|/)android/app/profile/''',
+    '''(^|/)android/app/release/''',
+    '''(^|/)ios/Flutter/\.last_build_id$''',
+    '''(^|/)\.swiftpm/''',
+
+    # IDE / editor
+    '''(^|/)\.idea/''',
+    '''(^|/)\.history/''',
+    '''(^|/)\.atom/''',
+
+    # Firebase generated files
+    '''(^|/)\.firebase/''',
+
+    # Logs and temporary files
+    '''\.log$''',
+    '''\.swp$''',
+    '''(^|/)\.DS_Store$''',
+
+    # Generated documentation
+    '''(^|/)doc/api/'''
+]
+

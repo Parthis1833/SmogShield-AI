@@ -1,0 +1,130 @@
+
+# ==========================================
+# ENVIRONMENT VARIABLES & SECRETS
+# ==========================================
+/backend/.env
+/backend/.env.*
+/backend/env/
+/backend/.venv/
+
+# Allow example environment files
+!.env.example
+!**/.env.example
+
+# Local frontend configuration
+/config/frontend.json
+
+
+*service-account*.json
+*service_account*.json
+
+# ==========================================
+# CREDENTIALS & SENSITIVE FILES
+# ==========================================
+credentials/
+**/credentials/
+secrets/
+**/secrets/
+
+*service-account*.json
+*service_account*.json
+
+*.pem
+*.p12
+*.pfx
+*.key
+
+# Firebase configuration files
+**/google-services.json
+**/GoogleService-Info.plist
+
+# ==========================================
+# PYTHON / FASTAPI
+# ==========================================
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+dist/
+*.log
+
+# ==========================================
+# FIREBASE
+# ==========================================
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# ==========================================
+# FLUTTER / DART
+# ==========================================
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+build/
+coverage/
+.widget_preview/
+
+app.*.symbols
+app.*.map.json
+
+# ==========================================
+# ANDROID
+# ==========================================
+/android/app/debug/
+/android/app/profile/
+/android/app/release/
+
+android/key.properties
+android/app/*.jks
+android/app/*.keystore
+
+# ==========================================
+# IOS / SWIFT
+# ==========================================
+**/ios/Flutter/.last_build_id
+.build/
+.buildlog/
+.swiftpm/
+migrate_working_dir/
+
+# ==========================================
+# IDE / EDITORS
+# ==========================================
+.idea/
+*.iml
+*.ipr
+*.iws
+.atom/
+.history/
+*.swp
+
+# ==========================================
+# SYSTEM / VERSION CONTROL
+# ==========================================
+.DS_Store
+.svn/
+
+# ==========================================
+# DOCUMENTATION
+# ==========================================
+**/doc/api/
+# Firebase configuration and credentials
+**/google-services.json
+**/GoogleService-Info.plist
+
+# Firebase service account credentials
+**/secrets/
+**/credentials/
+*service-account*.json
+*service_account*.json
